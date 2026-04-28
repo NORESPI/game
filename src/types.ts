@@ -52,6 +52,21 @@ export type StoryChoice = {
   label: string;
   effects?: Partial<Record<StatKey, number>>;
   nextSceneId?: string;
+export type StoryChoice = {
+  id: string;
+  label: string;
+  effects?: Partial<Record<
+    | 'studentCouncilTrust'
+    | 'bdePressure'
+    | 'directorAttention'
+    | 'teacherTrustShirogane'
+    | 'classUnityC'
+    | 'classDoctrineProgress'
+    | 'kaitoHostility'
+    | 'reikaInterest'
+    | 'yutoTrust',
+    number
+  >>;
 };
 
 export type StoryScene = {
@@ -65,6 +80,8 @@ export type StoryScene = {
   choices?: StoryChoice[];
   autoUnlockCharacters?: string[];
   nextSceneId?: string;
+  choices?: StoryChoice[];
+  autoUnlockCharacters?: string[];
 };
 
 export type Character = {

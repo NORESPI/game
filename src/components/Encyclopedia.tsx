@@ -10,12 +10,18 @@ type YearFilter = 'all' | '1' | '2' | '3' | '0';
 export function Encyclopedia() {
   const [tab, setTab] = useState<Tab>('classes');
   const [yearFilter, setYearFilter] = useState<YearFilter>('all');
+type Tab = 'classes' | 'dossiers' | 'bde' | 'admin';
+
+export function Encyclopedia() {
+  const [tab, setTab] = useState<Tab>('classes');
+  const [yearFilter, setYearFilter] = useState<'all' | '1' | '2' | '3' | '0'>('all');
   const [classFilter, setClassFilter] = useState<'all' | ClassId>('all');
 
   return (
     <section className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
       <div className="mb-3 flex flex-wrap gap-2 text-xs">
         {(['classes', 'dossiers', 'bde', 'admin', 'art'] as Tab[]).map((t) => (
+        {(['classes', 'dossiers', 'bde', 'admin'] as Tab[]).map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`rounded px-2 py-1 ${tab === t ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-300'}`}>
             {t.toUpperCase()}
           </button>
@@ -54,6 +60,8 @@ function DossiersView({
 }: {
   yearFilter: YearFilter;
   setYearFilter: (y: YearFilter) => void;
+  yearFilter: 'all' | '1' | '2' | '3' | '0';
+  setYearFilter: (y: 'all' | '1' | '2' | '3' | '0') => void;
   classFilter: 'all' | ClassId;
   setClassFilter: (c: 'all' | ClassId) => void;
 }) {
@@ -68,6 +76,7 @@ function DossiersView({
     <div>
       <div className="mb-2 flex gap-2 text-xs">
         <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value as YearFilter)} className="rounded bg-slate-800 p-1 text-slate-200">
+        <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value as any)} className="rounded bg-slate-800 p-1 text-slate-200">
           <option value="all">Toutes années</option>
           <option value="1">1ère année</option>
           <option value="2">2ème année</option>
@@ -75,6 +84,7 @@ function DossiersView({
           <option value="0">Administration</option>
         </select>
         <select value={classFilter} onChange={(e) => setClassFilter(e.target.value as 'all' | ClassId)} className="rounded bg-slate-800 p-1 text-slate-200">
+        <select value={classFilter} onChange={(e) => setClassFilter(e.target.value as any)} className="rounded bg-slate-800 p-1 text-slate-200">
           <option value="all">Toutes classes</option>
           {classes.map((id) => (
             <option key={id} value={id}>
