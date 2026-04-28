@@ -30,6 +30,28 @@ export type ChapterId =
   | 'chapter5'
   | 'chapter6';
 
+export type StatKey =
+  | 'studentCouncilTrust'
+  | 'bdePressure'
+  | 'directorAttention'
+  | 'teacherTrustShirogane'
+  | 'classUnityC'
+  | 'classDoctrineProgress'
+  | 'kaitoHostility'
+  | 'reikaInterest'
+  | 'yutoTrust';
+
+export type SceneArt = {
+  backgroundId: string;
+  portraitIds?: string[];
+  cinematicShot?: 'wide' | 'mid' | 'close' | 'over-shoulder';
+};
+
+export type StoryChoice = {
+  id: string;
+  label: string;
+  effects?: Partial<Record<StatKey, number>>;
+  nextSceneId?: string;
 export type StoryChoice = {
   id: string;
   label: string;
@@ -54,6 +76,10 @@ export type StoryScene = {
   location: string;
   speakerId?: string;
   text: string;
+  art: SceneArt;
+  choices?: StoryChoice[];
+  autoUnlockCharacters?: string[];
+  nextSceneId?: string;
   choices?: StoryChoice[];
   autoUnlockCharacters?: string[];
 };
@@ -69,4 +95,12 @@ export type Character = {
   spriteIds: string[];
   relationshipInitial: number;
   unlockedNotes: string[];
+};
+
+export type ArtAsset = {
+  id: string;
+  type: 'background' | 'portrait';
+  title: string;
+  prompt: string;
+  localPath: string;
 };

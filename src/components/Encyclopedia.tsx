@@ -1,8 +1,15 @@
 import { useMemo, useState } from 'react';
+import { artAssets } from '../data/artAssets';
 import { characterById, characters, classes } from '../data/characters';
 import { useVNStore } from '../store';
 import type { ClassId } from '../types';
 
+type Tab = 'classes' | 'dossiers' | 'bde' | 'admin' | 'art';
+type YearFilter = 'all' | '1' | '2' | '3' | '0';
+
+export function Encyclopedia() {
+  const [tab, setTab] = useState<Tab>('classes');
+  const [yearFilter, setYearFilter] = useState<YearFilter>('all');
 type Tab = 'classes' | 'dossiers' | 'bde' | 'admin';
 
 export function Encyclopedia() {
@@ -13,6 +20,7 @@ export function Encyclopedia() {
   return (
     <section className="rounded-xl border border-slate-700 bg-slate-900/80 p-4">
       <div className="mb-3 flex flex-wrap gap-2 text-xs">
+        {(['classes', 'dossiers', 'bde', 'admin', 'art'] as Tab[]).map((t) => (
         {(['classes', 'dossiers', 'bde', 'admin'] as Tab[]).map((t) => (
           <button key={t} onClick={() => setTab(t)} className={`rounded px-2 py-1 ${tab === t ? 'bg-violet-600 text-white' : 'bg-slate-800 text-slate-300'}`}>
             {t.toUpperCase()}
@@ -24,6 +32,7 @@ export function Encyclopedia() {
       {tab === 'dossiers' && <DossiersView yearFilter={yearFilter} setYearFilter={setYearFilter} classFilter={classFilter} setClassFilter={setClassFilter} />}
       {tab === 'bde' && <BDEView />}
       {tab === 'admin' && <AdminView />}
+      {tab === 'art' && <ArtView />}
     </section>
   );
 }
@@ -49,6 +58,8 @@ function DossiersView({
   classFilter,
   setClassFilter,
 }: {
+  yearFilter: YearFilter;
+  setYearFilter: (y: YearFilter) => void;
   yearFilter: 'all' | '1' | '2' | '3' | '0';
   setYearFilter: (y: 'all' | '1' | '2' | '3' | '0') => void;
   classFilter: 'all' | ClassId;
@@ -64,6 +75,7 @@ function DossiersView({
   return (
     <div>
       <div className="mb-2 flex gap-2 text-xs">
+        <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value as YearFilter)} className="rounded bg-slate-800 p-1 text-slate-200">
         <select value={yearFilter} onChange={(e) => setYearFilter(e.target.value as any)} className="rounded bg-slate-800 p-1 text-slate-200">
           <option value="all">Toutes années</option>
           <option value="1">1ère année</option>
@@ -71,6 +83,7 @@ function DossiersView({
           <option value="3">3ème année</option>
           <option value="0">Administration</option>
         </select>
+        <select value={classFilter} onChange={(e) => setClassFilter(e.target.value as 'all' | ClassId)} className="rounded bg-slate-800 p-1 text-slate-200">
         <select value={classFilter} onChange={(e) => setClassFilter(e.target.value as any)} className="rounded bg-slate-800 p-1 text-slate-200">
           <option value="all">Toutes classes</option>
           {classes.map((id) => (
@@ -127,6 +140,24 @@ function AdminView() {
           <p className="text-slate-400">{characterById[id].shortDescription}</p>
         </div>
       ))}
+    </div>
+  );
+}
+
+function ArtView() {
+  return (
+    <div className="space-y-2 text-xs text-slate-200">
+      <p className="text-sm font-semibold text-white">Pipeline GPT Image 2</p>
+      <p className="text-slate-400">Place les rendus dans <code>/public/generated/*.webp</code> selon les IDs ci-dessous.</p>
+      <div className="max-h-80 space-y-2 overflow-auto">
+        {artAssets.map((asset) => (
+          <div key={asset.id} className="rounded border border-slate-700 bg-slate-800/70 p-2">
+            <p className="font-medium text-violet-200">{asset.id}</p>
+            <p className="text-slate-400">{asset.title}</p>
+            <p className="text-slate-500">{asset.prompt}</p>
+          </div>
+        ))}
+      </div>
     </div>
   );
 }
